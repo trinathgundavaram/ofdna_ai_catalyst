@@ -1,0 +1,58 @@
+name: Azure Web App Deployment using Bicep
+
+on:
+  push:
+    branches:
+      - main  # Triggers on a push to the main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code from the repository
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Step 2: Log in to Azure using the Service Principal
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Step 3: Set up Bicep CLI
+    - name: Set up Bicep
+      run: |
+        az bicep install
+        az bicep upgrade  # Ensures you have the latest version
+
+    # Step 4: Create Resource Group (if not exists)
+    - name: Create Resource Group
+      run: |
+        az group create \
+          --name ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --location ${{ secrets.AZURE_LOCATION }}
+
+    # Step 5: Deploy Web App using Bicep
+    - name: Deploy Web App Bicep
+      run: |
+        az deployment group create \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --template-file ./bicep/main.bicep \
+          --parameters webAppName='${{ secrets.AZURE_WEBAPP_NAME }}' location='${{ secrets.AZURE_LOCATION }}'
+
+    # Step 6: Deploy Azure Storage Account (Optional)
+    - name: Deploy Storage Account using Bicep
+      run: |
+        az deployment group create \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --template-file ./bicep/storage.bicep \
+          --parameters storageAccountName='myStorageAccount' location='${{ secrets.AZURE_LOCATION }}'
+
+    # Step 7: Build and deploy the web app code
+    - name: Build and Deploy Web App Code
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_CREDENTIALS }}
+        package: './path-to-your-code'  # Adjust this path to point to your built app
