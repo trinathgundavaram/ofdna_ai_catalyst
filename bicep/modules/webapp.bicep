@@ -2,7 +2,7 @@ param webAppName string
 param location string
 param appServicePlanId string  
 
-resource webApp 'Microsoft.Web/sites@2022-11-01' = {
+resource webApp 'Microsoft.Web/sites@2024-04-01' = {
   name: webAppName
   location: location
   properties: {
