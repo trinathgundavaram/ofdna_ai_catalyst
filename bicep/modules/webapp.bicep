@@ -2,15 +2,15 @@ param webAppName string
 param location string
 param appServicePlanId string  
 
-resource webApp 'Microsoft.Web/sites@2022-03-01' = {
+resource webApp 'Microsoft.Web/sites@2022-11-01' = {
   name: webAppName
   location: location
   properties: {
     serverFarmId: appServicePlanId  
     siteConfig: {
-      //linuxFxVersion: 'PYTHON|3.9'  
+      linuxFxVersion: 'PYTHON|3.11' 
     }
-    reserved: true  
+    reserved: true 
   }
 }
 
