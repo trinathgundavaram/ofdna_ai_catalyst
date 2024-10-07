@@ -28,6 +28,7 @@ jobs:
         az group create \
           --name ${{ secrets.AZURE_RESOURCE_GROUP }} \
           --location ${{ secrets.AZURE_LOCATION }}
+          
 
     - name: Deploy Web App and Service Plan
       run: |
