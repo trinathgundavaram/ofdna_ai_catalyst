@@ -8,7 +8,7 @@ resource webApp 'Microsoft.Web/sites@2022-03-01' = {
   properties: {
     serverFarmId: appServicePlanId  
     siteConfig: {
-      linuxFxVersion: 'PYTHON|3.9'  
+      //linuxFxVersion: 'PYTHON|3.9'  
     }
     reserved: true  
   }
