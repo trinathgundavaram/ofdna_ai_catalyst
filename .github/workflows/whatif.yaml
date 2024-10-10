@@ -32,18 +32,13 @@ jobs:
       run: |
         az bicep install
 
-    - name: Create Resource Group
-      run: |
-        az group create \
-          --name ${{ secrets.AZURE_RESOURCE_GROUP }} 
-          --location ${{ secrets.AZURE_LOCATION }}
 
     
     - name: Deploy Web App and Service Plan
       run: |
         az deployment group create \
-          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
           --template-file ./bicep/main.bicep \
-          --parameters webAppName='ofdna-web-dev' \
-                       appServicePlanName='ofdna-app-service-plan' \
-                       location='${{ secrets.AZURE_LOCATION }}'
+          --parameters webAppName='ofdna-web-dev2' \
+                       appServicePlanName='ofdna-app-service-plan2' \
+                       location='${{ env.AZURE_LOCATION }}'
