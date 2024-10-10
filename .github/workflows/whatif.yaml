@@ -8,10 +8,13 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment: Dev
+    environment: dev
     permissions: 
       id-token: write
       contents: read
+    env:
+      AZURE_RESOURCE_GROUP: ofdna
+      AZURE_LOCATION: eastus
 
 
     steps:
@@ -41,6 +44,6 @@ jobs:
         az deployment group create \
           --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
           --template-file ./bicep/main.bicep \
-          --parameters webAppName='ofdna-web-dev2' \
-                       appServicePlanName='ofdna-app-service-plan2' \
+          --parameters webAppName='ofdna-web-dev' \
+                       appServicePlanName='ofdna-app-service-plan' \
                        location='${{ secrets.AZURE_LOCATION }}'
